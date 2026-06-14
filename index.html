@@ -1,466 +1,646 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Aditya Pathania — Senior Data Engineer</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Aditya Pathania — Senior Data Engineer</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 
-    :root {
-      --ink:     #111111;
-      --steel:   #444444;
-      --muted:   #888888;
-      --rule:    #DDDDDD;
-      --bg:      #F9F7F4;
-      --cream:   #F2EFE9;
-      --serif:   'Playfair Display', Georgia, serif;
-      --sans:    'DM Sans', system-ui, sans-serif;
-    }
+:root{
+  --bg:#0b0a0c;
+  --panel:#161318;
+  --panel2:#1e1a20;
+  --ink:#020202;
+  --bone:#e7e2d6;
+  --dim:#7c7670;
+  --acid:#a3e635;
+  --acid-dim:#4d6e16;
+  --smoke:#a855f7;
+  --smoke-dim:#5b2f87;
+  --rust:#e23d3d;
+  --rust-dim:#7a1f1f;
+  --rot:#d4b830;
+  --display:'Anton',sans-serif;
+  --mono:'Space Mono',monospace;
+}
 
-    html { scroll-behavior: smooth; }
+html{scroll-behavior:smooth;}
 
-    body {
-      background: var(--bg);
-      color: var(--ink);
-      font-family: var(--sans);
-      font-weight: 300;
-      line-height: 1.7;
-      -webkit-font-smoothing: antialiased;
-    }
+body{
+  background:var(--bg);
+  color:var(--bone);
+  font-family:var(--mono);
+  font-weight:400;
+  font-size:1.02rem;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
 
-    /* ── Layout ── */
-    .container {
-      max-width: 780px;
-      margin: 0 auto;
-      padding: 0 2rem;
-    }
+/* concrete grain overlay */
+body::after{
+  content:'';
+  position:fixed;inset:0;z-index:9998;
+  pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+  opacity:.08;mix-blend-mode:overlay;
+}
 
-    /* ── Header ── */
-    header {
-      padding: 6rem 0 3rem;
-      border-bottom: 1px solid var(--rule);
-      margin-bottom: 0;
-    }
+/* ── Smoke layer (SVG turbulence-distorted blobs) ── */
+.smoke-bg{
+  position:fixed;inset:0;z-index:0;overflow:hidden;background:var(--bg);
+}
+.smoke-svg{position:absolute;inset:-20%;width:140%;height:140%;}
 
-    .header-inner {
-      max-width: 780px;
-      margin: 0 auto;
-      padding: 0 2rem;
-    }
+.smoke-blob{
+  position:absolute;border-radius:50%;
+  filter:url(#smokeTurb) blur(8px);
+  mix-blend-mode:screen;
+  opacity:.28;
+  animation:drift ease-in-out infinite;
+}
+@keyframes drift{
+  0%{transform:translate(0,0) scale(1) rotate(0deg);}
+  50%{transform:translate(80px,-60px) scale(1.3) rotate(15deg);}
+  100%{transform:translate(0,0) scale(1) rotate(0deg);}
+}
 
-    .name {
-      font-family: var(--serif);
-      font-size: clamp(3rem, 8vw, 5.5rem);
-      font-weight: 900;
-      line-height: 1;
-      letter-spacing: -0.02em;
-      color: var(--ink);
-      opacity: 0;
-      transform: translateY(20px);
-      animation: fadeUp 0.7s ease forwards 0.1s;
-    }
+/* splatter decorations */
+.splat{
+  position:absolute;border-radius:50%;
+  background:var(--rust);opacity:.18;
+  filter:blur(1px);
+}
 
-    .title {
-      font-family: var(--sans);
-      font-size: 1rem;
-      font-weight: 400;
-      color: var(--muted);
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      margin-top: 0.75rem;
-      opacity: 0;
-      animation: fadeUp 0.7s ease forwards 0.25s;
-    }
+* { position:relative; }
+nav, .hero, main, footer { z-index:1; }
 
-    .contact-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.25rem 1.5rem;
-      margin-top: 2rem;
-      opacity: 0;
-      animation: fadeUp 0.7s ease forwards 0.4s;
-    }
+/* ══════ NAV ══════ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:1rem 2rem;
+  background:rgba(11,10,12,.85);
+  backdrop-filter:blur(10px);
+  border-bottom:3px solid var(--ink);
+  box-shadow:0 3px 0 var(--smoke-dim);
+}
 
-    .contact-row a, .contact-row span {
-      font-size: 0.8rem;
-      color: var(--muted);
-      text-decoration: none;
-      letter-spacing: 0.03em;
-      transition: color 0.2s;
-    }
+.nav-logo{
+  font-family:var(--display);font-size:1.3rem;
+  color:var(--acid);letter-spacing:.08em;
+  text-shadow:2px 2px 0 #000;
+}
 
-    .contact-row a:hover { color: var(--ink); }
+.nav-links{display:flex;gap:2rem;list-style:none;}
 
-    /* ── Nav ── */
-    nav {
-      position: sticky;
-      top: 0;
-      background: var(--bg);
-      border-bottom: 1px solid var(--rule);
-      z-index: 100;
-      padding: 0.9rem 0;
-    }
+.nav-links a{
+  font-family:var(--mono);font-size:.72rem;font-weight:700;
+  color:var(--dim);text-decoration:none;
+  text-transform:uppercase;letter-spacing:.12em;
+  transition:color .15s;
+}
 
-    .nav-inner {
-      max-width: 780px;
-      margin: 0 auto;
-      padding: 0 2rem;
-      display: flex;
-      gap: 2rem;
-    }
+.nav-links a:hover,.nav-links a.active{color:var(--rust);}
 
-    nav a {
-      font-size: 0.72rem;
-      font-weight: 500;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--muted);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
+/* ══════ HERO ══════ */
+.hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:8rem 2rem 4rem;max-width:960px;margin:0 auto;
+}
 
-    nav a:hover { color: var(--ink); }
+.tag-stamp{
+  display:inline-flex;align-items:center;gap:.6rem;
+  font-family:var(--mono);font-size:.7rem;font-weight:700;
+  color:var(--ink);background:var(--acid);
+  padding:.4rem 1rem;margin-bottom:2rem;
+  text-transform:uppercase;letter-spacing:.15em;
+  transform:rotate(-2deg) skewX(-3deg);
+  box-shadow:4px 4px 0 var(--ink);
+  opacity:0;animation:pop .5s ease forwards .15s;
+}
 
-    /* ── Sections ── */
-    section {
-      padding: 4rem 0;
-      border-bottom: 1px solid var(--rule);
-      opacity: 0;
-      transform: translateY(16px);
-      animation: fadeUp 0.6s ease forwards;
-    }
+.hero-name{
+  font-family:var(--display);
+  font-size:clamp(4rem,12vw,8.5rem);
+  color:var(--bone);
+  line-height:.92;letter-spacing:.01em;
+  text-transform:uppercase;
+  text-shadow:
+    5px 5px 0 var(--smoke-dim),
+    10px 10px 0 var(--ink);
+  margin-bottom:1.5rem;
+  opacity:0;animation:pop .6s ease forwards .3s;
+}
 
-    section:nth-child(1) { animation-delay: 0.5s; }
-    section:nth-child(2) { animation-delay: 0.6s; }
-    section:nth-child(3) { animation-delay: 0.7s; }
-    section:nth-child(4) { animation-delay: 0.8s; }
-    section:nth-child(5) { animation-delay: 0.9s; }
+.hero-name .accent{ color:var(--rust); -webkit-text-stroke:2px var(--ink); }
 
-    .section-label {
-      font-family: var(--sans);
-      font-size: 0.65rem;
-      font-weight: 500;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 2rem;
-    }
+.hero-class{
+  font-family:var(--mono);font-size:1rem;font-weight:700;
+  color:var(--smoke);text-transform:uppercase;letter-spacing:.2em;
+  margin-bottom:1.75rem;
+  opacity:0;animation:pop .5s ease forwards .45s;
+}
 
-    /* ── Profile ── */
-    .profile-text {
-      font-family: var(--serif);
-      font-size: 1.2rem;
-      line-height: 1.75;
-      color: var(--steel);
-      max-width: 640px;
-    }
+.hero-class::before{content:'// ';color:var(--dim);}
 
-    /* ── Skills ── */
-    .skills-grid {
-      display: grid;
-      gap: 0.75rem;
-    }
+.hero-desc{
+  font-size:1.15rem;color:var(--bone);
+  max-width:600px;margin-bottom:2.5rem;
+  opacity:0;animation:pop .5s ease forwards .6s;
+}
 
-    .skill-row {
-      display: grid;
-      grid-template-columns: 130px 1fr;
-      gap: 1rem;
-      padding: 0.6rem 0;
-      border-bottom: 1px solid var(--cream);
-    }
+.hero-desc .hl{color:var(--acid);font-weight:700;}
 
-    .skill-label {
-      font-size: 0.72rem;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--muted);
-      padding-top: 0.1rem;
-    }
+/* stat strips */
+.stats-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+  background:var(--ink);border:1px solid var(--ink);
+  margin-bottom:2.5rem;
+  opacity:0;animation:pop .5s ease forwards .75s;
+}
 
-    .skill-value {
-      font-family: var(--serif);
-      font-size: 0.95rem;
-      color: var(--ink);
-    }
+.stat-cell{
+  background:var(--panel);
+  padding:1.25rem 1rem;
+  text-align:center;
+}
 
-    /* ── Experience ── */
-    .job {
-      margin-bottom: 3rem;
-    }
+.stat-num{
+  font-family:var(--display);font-size:2.2rem;
+  color:var(--acid);line-height:1;
+  text-shadow:2px 2px 0 var(--ink);
+}
 
-    .job:last-child { margin-bottom: 0; }
+.stat-label{
+  font-family:var(--mono);font-size:.6rem;font-weight:700;
+  color:var(--dim);text-transform:uppercase;letter-spacing:.12em;
+  margin-top:.5rem;
+}
 
-    .job-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-bottom: 0.25rem;
-    }
+.hero-contact{
+  display:flex;flex-wrap:wrap;gap:.85rem;
+  opacity:0;animation:pop .5s ease forwards .9s;
+}
 
-    .job-title {
-      font-family: var(--serif);
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: var(--ink);
-    }
+.tag-btn{
+  font-family:var(--mono);font-size:.75rem;font-weight:700;
+  color:var(--bone);text-decoration:none;
+  background:var(--panel2);
+  border:2px solid var(--ink);
+  padding:.6rem 1.1rem;
+  text-transform:uppercase;letter-spacing:.08em;
+  transition:transform .12s,background .12s,color .12s,box-shadow .12s;
+}
 
-    .job-date {
-      font-size: 0.75rem;
-      color: var(--muted);
-      letter-spacing: 0.05em;
-      font-style: italic;
-    }
+.tag-btn:hover{
+  background:var(--rust);color:var(--ink);
+  transform:translate(-2px,-2px);
+  box-shadow:3px 3px 0 var(--ink);
+}
 
-    .job-company {
-      font-size: 0.8rem;
-      font-weight: 500;
-      color: var(--muted);
-      letter-spacing: 0.05em;
-      margin-bottom: 1rem;
-    }
+/* ══════ MAIN ══════ */
+main{max-width:960px;margin:0 auto;padding:0 2rem 6rem;}
 
-    .job-bullets {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
+.section{
+  padding:4.5rem 0;
+  opacity:0;transform:translateY(24px);
+  transition:opacity .6s ease,transform .6s ease;
+}
+.section.visible{opacity:1;transform:translateY(0);}
 
-    .job-bullets li {
-      font-size: 0.9rem;
-      color: var(--steel);
-      padding-left: 1.2rem;
-      position: relative;
-      line-height: 1.65;
-    }
+.section-title{
+  font-family:var(--display);
+  font-size:clamp(2.2rem,5vw,3.5rem);
+  color:var(--bone);text-transform:uppercase;
+  letter-spacing:.03em;
+  text-shadow:4px 4px 0 var(--smoke-dim);
+  margin-bottom:2.5rem;
+  display:flex;align-items:baseline;gap:1rem;
+}
 
-    .job-bullets li::before {
-      content: '–';
-      position: absolute;
-      left: 0;
-      color: var(--rule);
-    }
+.section-title .num{
+  font-family:var(--mono);font-size:.9rem;
+  color:var(--rust);font-weight:700;
+  text-shadow:none;
+}
 
-    /* ── Education & Certs ── */
-    .edu-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-bottom: 0.25rem;
-    }
+/* profile box — torn paper */
+.dialogue-box{
+  background:var(--panel);
+  border-left:5px solid var(--acid);
+  padding:2rem 2.25rem;
+  clip-path:polygon(0 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%);
+  box-shadow:6px 6px 0 var(--ink);
+}
 
-    .edu-title {
-      font-family: var(--serif);
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--ink);
-    }
+.dialogue-text{font-size:1.15rem;color:var(--bone);line-height:1.95;}
+.dialogue-text strong{color:var(--rot);font-weight:700;}
 
-    .edu-sub {
-      font-size: 0.82rem;
-      color: var(--muted);
-      margin-bottom: 1.5rem;
-    }
+/* ══════ SKILLS ══════ */
+.inventory{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+  gap:1rem;
+}
 
-    .certs {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.6rem;
-      margin-top: 0.5rem;
-    }
+.inv-slot{
+  background:var(--panel);
+  border:2px solid var(--ink);
+  border-top:4px solid var(--smoke);
+  padding:1.4rem;
+  transition:border-color .15s,transform .12s;
+}
 
-    .cert-tag {
-      font-size: 0.75rem;
-      font-weight: 500;
-      color: var(--steel);
-      border: 1px solid var(--rule);
-      padding: 0.35rem 0.85rem;
-      letter-spacing: 0.03em;
-      transition: border-color 0.2s, color 0.2s;
-    }
+.inv-slot:hover{
+  border-top-color:var(--acid);
+  transform:translateY(-4px);
+}
 
-    .cert-tag:hover {
-      border-color: var(--steel);
-      color: var(--ink);
-    }
+.inv-cat{
+  font-family:var(--display);font-size:1.15rem;
+  color:var(--bone);margin-bottom:.85rem;
+  text-transform:uppercase;letter-spacing:.05em;
+}
 
-    /* ── Footer ── */
-    footer {
-      padding: 3rem 0;
-      text-align: center;
-    }
+.inv-items{display:flex;flex-wrap:wrap;gap:.4rem;}
 
-    footer p {
-      font-size: 0.75rem;
-      color: var(--muted);
-      letter-spacing: 0.08em;
-    }
+.tag-pill{
+  font-size:.78rem;color:var(--dim);
+  background:var(--panel2);
+  padding:.25rem .65rem;
+  border:1px solid var(--ink);
+}
 
-    /* ── Animation ── */
-    @keyframes fadeUp {
-      to { opacity: 1; transform: translateY(0); }
-    }
+/* ══════ EXPERIENCE ══════ */
+.quest-log{display:flex;flex-direction:column;gap:1.5rem;}
 
-    /* ── Responsive ── */
-    @media (max-width: 600px) {
-      header { padding: 4rem 0 2.5rem; }
-      .skill-row { grid-template-columns: 1fr; gap: 0.25rem; }
-      .job-header { flex-direction: column; }
-    }
-  </style>
+.quest{
+  background:var(--panel);
+  border:2px solid var(--ink);
+  padding:1.75rem 2rem;
+  position:relative;
+}
+
+.quest.active{
+  border-left:5px solid var(--rust);
+  box-shadow:6px 6px 0 var(--smoke-dim);
+}
+.quest:not(.active){border-left:5px solid var(--dim);}
+
+.quest-ribbon{
+  display:inline-block;
+  font-family:var(--mono);font-size:.65rem;font-weight:700;
+  background:var(--acid);color:var(--ink);
+  padding:.3rem .7rem;
+  margin-bottom:.85rem;
+  text-transform:uppercase;letter-spacing:.15em;
+  transform:skewX(-6deg);
+}
+
+.quest.active .quest-ribbon{background:var(--rust);color:var(--bone);}
+
+.quest-header{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  flex-wrap:wrap;gap:.5rem;margin-bottom:.5rem;
+}
+
+.quest-title{
+  font-family:var(--display);font-size:1.5rem;
+  color:var(--bone);text-transform:uppercase;
+  line-height:1.15;letter-spacing:.02em;
+}
+
+.quest-period{
+  font-family:var(--mono);font-size:.72rem;font-weight:700;
+  color:var(--dim);text-align:right;
+  text-transform:uppercase;letter-spacing:.08em;
+  padding-top:.3rem;
+}
+
+.quest-giver{
+  font-size:.9rem;color:var(--rot);margin-bottom:1.1rem;
+  font-style:italic;
+}
+
+.quest-objectives{list-style:none;display:flex;flex-direction:column;gap:.55rem;}
+
+.quest-objectives li{
+  font-size:.92rem;color:var(--bone);line-height:1.7;
+  padding-left:1.5rem;position:relative;
+}
+
+.quest-objectives li::before{
+  content:'▸';
+  position:absolute;left:0;top:0;
+  color:var(--acid);font-size:1rem;
+}
+
+/* ══════ EDUCATION ══════ */
+.achievements{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+
+.achievement{
+  background:var(--panel);
+  border:2px solid var(--ink);
+  border-bottom:4px solid var(--rot);
+  padding:1.5rem;
+}
+
+.achievement-title{
+  font-family:var(--display);font-size:1.1rem;
+  color:var(--bone);margin-bottom:.4rem;
+  text-transform:uppercase;letter-spacing:.02em;line-height:1.3;
+}
+
+.achievement-sub{font-size:.85rem;color:var(--dim);}
+
+/* ══════ FOOTER ══════ */
+footer{
+  border-top:3px solid var(--ink);
+  box-shadow:0 -3px 0 var(--smoke-dim);
+  padding:2rem;max-width:960px;margin:0 auto;
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:1rem;
+}
+
+.footer-text{
+  font-family:var(--mono);font-size:.75rem;font-weight:700;
+  color:var(--dim);text-transform:uppercase;letter-spacing:.1em;
+}
+
+.footer-status{
+  font-family:var(--mono);font-size:.75rem;font-weight:700;
+  color:var(--acid);text-transform:uppercase;letter-spacing:.1em;
+  display:flex;align-items:center;gap:.6rem;
+}
+
+.footer-status .blip{
+  width:9px;height:9px;background:var(--acid);
+  border-radius:50%;
+  animation:blink 1.2s ease-in-out infinite;
+}
+
+/* ══════ ANIMATIONS ══════ */
+@keyframes pop{
+  from{opacity:0;transform:translateY(14px);}
+  to{opacity:1;transform:translateY(0);}
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+
+/* ══════ RESPONSIVE ══════ */
+@media(max-width:680px){
+  nav{padding:.8rem 1.2rem;}
+  .nav-links{display:none;}
+  .hero{padding:6rem 1.2rem 3rem;}
+  main{padding:0 1.2rem 4rem;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .achievements{grid-template-columns:1fr;}
+  .quest-header{flex-direction:column;}
+  .quest-period{text-align:left;}
+  footer{padding:1.5rem 1.2rem;flex-direction:column;text-align:center;}
+}
+</style>
 </head>
 <body>
 
-  <header>
-    <div class="header-inner">
-      <h1 class="name">Aditya Pathania</h1>
-      <p class="title">Senior Data Engineer</p>
-      <div class="contact-row">
-        <a href="mailto:lasuuun@icloud.com">lasuuun@icloud.com</a>
-        <span>9682359747</span>
-        <span>Jammu, J&K</span>
-        <a href="https://linkedin.com/in/adityapathania1711" target="_blank">LinkedIn</a>
-        <a href="https://github.com/double-coder" target="_blank">GitHub</a>
+<!-- SVG turbulence filter for smoke -->
+<svg width="0" height="0" style="position:absolute">
+  <filter id="smokeTurb">
+    <feTurbulence type="fractalNoise" baseFrequency="0.012 0.018" numOctaves="3" seed="7" result="turb"/>
+    <feDisplacementMap in="SourceGraphic" in2="turb" scale="70" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
+
+<div class="smoke-bg" id="smoke"></div>
+
+<nav>
+  <span class="nav-logo">A. PATHANIA</span>
+  <ul class="nav-links">
+    <li><a href="#profile">Profile</a></li>
+    <li><a href="#skills">Arsenal</a></li>
+    <li><a href="#experience">History</a></li>
+    <li><a href="#education">Credentials</a></li>
+  </ul>
+</nav>
+
+<div class="hero">
+  <div class="tag-stamp">◉ Available for new contracts</div>
+  <h1 class="hero-name">ADITYA<br><span class="accent">PATHANIA</span></h1>
+  <p class="hero-class">Senior Data Engineer</p>
+  <p class="hero-desc">7+ years engineering scalable data pipelines on Azure. Processing <span class="hl">10TB+</span> daily at <span class="hl">99.9%</span> SLA. Specialist in Spark, Databricks &amp; real-time streaming.</p>
+
+  <div class="stats-grid">
+    <div class="stat-cell"><div class="stat-num">7+</div><div class="stat-label">Years Exp</div></div>
+    <div class="stat-cell"><div class="stat-num">10TB+</div><div class="stat-label">Daily Volume</div></div>
+    <div class="stat-cell"><div class="stat-num">99.9%</div><div class="stat-label">SLA</div></div>
+    <div class="stat-cell"><div class="stat-num">+40%</div><div class="stat-label">Perf Gain</div></div>
+  </div>
+
+  <div class="hero-contact">
+    <a class="tag-btn" href="mailto:lasuuun@icloud.com">Email</a>
+    <a class="tag-btn" href="https://linkedin.com/in/adityapathania1711" target="_blank">LinkedIn</a>
+    <a class="tag-btn" href="https://double-coder.github.io/adityapathania1711.github.io/" target="_blank">Portfolio</a>
+    <span class="tag-btn" style="cursor:default;">Jammu, J&K</span>
+  </div>
+</div>
+
+<main>
+
+  <div class="section" id="profile">
+    <h2 class="section-title"><span class="num">01</span>Profile</h2>
+    <div class="dialogue-box">
+      <p class="dialogue-text">Results-driven data engineer with <strong>7+ years</strong> building and optimizing scalable pipelines and cloud data architectures. Expert in <strong>Apache Spark</strong>, the Azure data ecosystem, and real-time streaming. Consistent high-performer recognized for technical depth, automation-first thinking, and on-time delivery across enterprise Energy sector engagements.</p>
+    </div>
+  </div>
+
+  <div class="section" id="skills">
+    <h2 class="section-title"><span class="num">02</span>Arsenal</h2>
+    <div class="inventory">
+      <div class="inv-slot">
+        <div class="inv-cat">Big Data</div>
+        <div class="inv-items">
+          <span class="tag-pill">Apache Spark</span><span class="tag-pill">PySpark</span><span class="tag-pill">Spark Streaming</span><span class="tag-pill">Databricks</span>
+        </div>
+      </div>
+      <div class="inv-slot">
+        <div class="inv-cat">Cloud</div>
+        <div class="inv-items">
+          <span class="tag-pill">Azure Synapse</span><span class="tag-pill">Data Factory</span><span class="tag-pill">ADX</span><span class="tag-pill">Data Lake</span><span class="tag-pill">Logic Apps</span>
+        </div>
+      </div>
+      <div class="inv-slot">
+        <div class="inv-cat">Storage</div>
+        <div class="inv-items">
+          <span class="tag-pill">Delta Lake</span><span class="tag-pill">Teradata</span><span class="tag-pill">SQL Server</span><span class="tag-pill">Azure SQL</span><span class="tag-pill">SSAS</span>
+        </div>
+      </div>
+      <div class="inv-slot">
+        <div class="inv-cat">Languages</div>
+        <div class="inv-items">
+          <span class="tag-pill">Python</span><span class="tag-pill">SQL</span><span class="tag-pill">Go</span><span class="tag-pill">C# / .NET</span>
+        </div>
+      </div>
+      <div class="inv-slot">
+        <div class="inv-cat">DevOps</div>
+        <div class="inv-items">
+          <span class="tag-pill">CI/CD</span><span class="tag-pill">Ansible</span><span class="tag-pill">Docker</span><span class="tag-pill">Log Analytics</span><span class="tag-pill">SAST/DAST</span>
+        </div>
+      </div>
+      <div class="inv-slot">
+        <div class="inv-cat">Methods</div>
+        <div class="inv-items">
+          <span class="tag-pill">ETL/ELT</span><span class="tag-pill">Data Modelling</span><span class="tag-pill">Warehousing</span><span class="tag-pill">Agile / TDD</span>
+        </div>
       </div>
     </div>
-  </header>
+  </div>
 
-  <nav>
-    <div class="nav-inner">
-      <a href="#profile">Profile</a>
-      <a href="#skills">Skills</a>
-      <a href="#experience">Experience</a>
-      <a href="#education">Education</a>
-    </div>
-  </nav>
+  <div class="section" id="experience">
+    <h2 class="section-title"><span class="num">03</span>History</h2>
+    <div class="quest-log">
 
-  <main class="container">
-
-    <section id="profile">
-      <p class="section-label">Profile</p>
-      <p class="profile-text">Results-driven data engineer with 6+ years building and optimizing scalable pipelines and cloud data architectures. Expert in Apache Spark, the Azure data ecosystem, and real-time streaming. Consistent high-performer recognized for technical depth, automation-first thinking, and on-time quality delivery across enterprise Energy sector engagements.</p>
-    </section>
-
-    <section id="skills">
-      <p class="section-label">Skills</p>
-      <div class="skills-grid">
-        <div class="skill-row">
-          <span class="skill-label">Big Data</span>
-          <span class="skill-value">Apache Spark · PySpark · Kafka · Spark Structured Streaming · Databricks · dbt</span>
+      <div class="quest active">
+        <div class="quest-ribbon">Current</div>
+        <div class="quest-header">
+          <span class="quest-title">Specialist —<br>Data Engineering</span>
+          <span class="quest-period">Apr 2025 – Present<br>LTIMindtree · Noida</span>
         </div>
-        <div class="skill-row">
-          <span class="skill-label">Cloud</span>
-          <span class="skill-value">Azure Synapse · Azure Data Factory · Azure Data Explorer · Data Lake · Logic Apps · Function Apps</span>
-        </div>
-        <div class="skill-row">
-          <span class="skill-label">Storage</span>
-          <span class="skill-value">Delta Lake · Teradata · SQL Server · Azure SQL · SSAS</span>
-        </div>
-        <div class="skill-row">
-          <span class="skill-label">Languages</span>
-          <span class="skill-value">Python · SQL · Scala · C# / .NET</span>
-        </div>
-        <div class="skill-row">
-          <span class="skill-label">DevOps</span>
-          <span class="skill-value">CI/CD · Ansible · Docker · Azure Log Analytics · SAST/DAST · Azure DevOps</span>
-        </div>
-        <div class="skill-row">
-          <span class="skill-label">Methods</span>
-          <span class="skill-value">ETL/ELT · Data Modelling · Data Warehousing · Agile · TDD · Data Governance</span>
-        </div>
-      </div>
-    </section>
-
-    <section id="experience">
-      <p class="section-label">Experience</p>
-
-      <div class="job">
-        <div class="job-header">
-          <span class="job-title">Specialist – Data Engineering</span>
-          <span class="job-date">Apr 2025 – Present</span>
-        </div>
-        <p class="job-company">LTIMindtree · Noida, Delhi NCR</p>
-        <ul class="job-bullets">
-          <li>Architected a robust ADF error-handling framework for SSAS model refreshes and ETL pipelines with automated email notifications, significantly reducing MTTR and operational downtime.</li>
-          <li>Engineered automated trigger management to stop ADF triggers on job completion, eliminating idle resource consumption and optimizing cloud compute costs.</li>
-          <li>Designed a CI/CD-driven webhook password rotation workflow, removing manual intervention and strengthening security compliance across all integrated services.</li>
-          <li>Built a real-time job monitoring dashboard on Azure Data Explorer (ADX), delivering end-to-end observability and enabling faster incident response.</li>
-          <li>Maintained 100% InfoSec compliance — zero phishing failures, zero unauthorized IT changes; proactively enabled SAST scans and remediated all identified vulnerabilities.</li>
-          <li>Cross-skilled from BAEC to Offshore asset class; mentored multiple engineers during GOM/SJV onboarding, reducing ramp-up time across the team.</li>
-          <li>Delivered all sprint user stories on time with CI/CD adherence, test-driven development, and mandatory peer reviews before every production deployment.</li>
+        <p class="quest-giver">Engagement: LTIMindtree / Chevron</p>
+        <ul class="quest-objectives">
+          <li>Architected a robust ADF error-handling framework for SSAS model refreshes and ETL pipelines with automated email notifications, significantly reducing MTTR.</li>
+          <li>Engineered automated trigger management to stop ADF triggers on job completion, optimizing cloud compute costs.</li>
+          <li>Designed a CI/CD-driven webhook password rotation workflow, strengthening security compliance.</li>
+          <li>Built a real-time job monitoring dashboard on Azure Data Explorer (ADX) for end-to-end observability.</li>
+          <li>Maintained 100% InfoSec compliance — zero phishing failures, zero unauthorized IT changes.</li>
+          <li>Cross-skilled from BAEC to Offshore asset class; mentored engineers during GOM/SJV onboarding.</li>
+          <li>Delivered all sprint user stories on time with CI/CD adherence, TDD, and peer reviews.</li>
         </ul>
       </div>
 
-      <div class="job">
-        <div class="job-header">
-          <span class="job-title">Senior Data Engineer</span>
-          <span class="job-date">Dec 2022 – Mar 2025</span>
+      <div class="quest">
+        <div class="quest-ribbon">Closed</div>
+        <div class="quest-header">
+          <span class="quest-title">Senior<br>Data Engineer</span>
+          <span class="quest-period">Dec 2022 – Mar 2025<br>LTIMindtree · Noida</span>
         </div>
-        <p class="job-company">LTIMindtree · Noida, Delhi NCR</p>
-        <ul class="job-bullets">
-          <li>Led design and development of scalable ETL pipelines using Apache Spark and Azure Synapse, processing 10TB+ of data daily at 99.9% SLA — rated Outstanding Performer in 2024-25.</li>
-          <li>Optimized pipeline performance by 40% through Delta table strategies, partitioning, and bucketing; reduced data freshness latency to 15-minute refresh cycles via ADF automation.</li>
-          <li>Enabled CI/CD in Azure DevOps to automate deployment of Data Factory, databases, and infrastructure using Ansible, cutting manual deployment effort significantly.</li>
-          <li>Implemented reusable automation frameworks and comprehensive documentation; recognized by senior management and earned client appreciation awards quarterly.</li>
-          <li>Supported multiple data warehouses ensuring data integrity, availability, and SLA compliance while collaborating with source teams to resolve upstream data issues.</li>
+        <p class="quest-giver">Outcome: Outstanding Performer (2024-25)</p>
+        <ul class="quest-objectives">
+          <li>Led design and development of scalable ETL pipelines using Apache Spark and Azure Synapse, processing 10TB+ daily at 99.9% SLA.</li>
+          <li>Optimized pipeline performance by 40% through Delta table strategies, partitioning, and bucketing.</li>
+          <li>Enabled CI/CD in Azure DevOps to automate deployment of Data Factory, databases, and infrastructure.</li>
+          <li>Implemented reusable automation frameworks; earned client appreciation awards quarterly.</li>
+          <li>Supported multiple data warehouses ensuring data integrity, availability, and SLA compliance.</li>
         </ul>
       </div>
 
-      <div class="job">
-        <div class="job-header">
-          <span class="job-title">Data Engineer</span>
-          <span class="job-date">Aug 2020 – Dec 2022</span>
+      <div class="quest">
+        <div class="quest-ribbon">Closed</div>
+        <div class="quest-header">
+          <span class="quest-title">Data Engineer</span>
+          <span class="quest-period">Aug 2020 – Dec 2022<br>LTIMindtree · Noida</span>
         </div>
-        <p class="job-company">LTIMindtree · Noida, Delhi NCR</p>
-        <ul class="job-bullets">
+        <ul class="quest-objectives">
           <li>Led on-premises Teradata data warehouse migration to Azure Cloud using Data Factory, Logic Apps, Function Apps, Data Lake, and Databricks.</li>
-          <li>Improved Databricks query performance by 40% through Delta tables, partitioning, and bucketing; built ETL/ELT pipelines processing 10TB+ daily at 99.9% SLA.</li>
+          <li>Improved Databricks query performance by 40% through Delta tables, partitioning, and bucketing.</li>
           <li>Configured proactive pipeline monitoring using Azure Log Analytics custom queries and alert rules.</li>
         </ul>
       </div>
 
-      <div class="job">
-        <div class="job-header">
-          <span class="job-title">Software Engineer</span>
-          <span class="job-date">Aug 2018 – Aug 2020</span>
+      <div class="quest">
+        <div class="quest-ribbon">Closed</div>
+        <div class="quest-header">
+          <span class="quest-title">Software<br>Engineer</span>
+          <span class="quest-period">Aug 2018 – Aug 2020<br>LTIMindtree · Noida</span>
         </div>
-        <p class="job-company">LTIMindtree · Noida, Delhi NCR</p>
-        <ul class="job-bullets">
-          <li>Built a .NET/WCF application to automate Windows Server auditing across IIS 7+ enterprise infrastructure, earning manager recognition for rapid upskilling.</li>
+        <ul class="quest-objectives">
+          <li>Built a .NET/WCF application to automate Windows Server auditing across IIS 7+ enterprise infrastructure.</li>
           <li>Developed a Social Investment web application with PowerApps admin portal for sponsorship approval workflows.</li>
-          <li>Conducted KT sessions for 4 production applications; received client praise for SLA adherence and attention to detail.</li>
+          <li>Conducted KT sessions for 4 production applications; received client praise for SLA adherence.</li>
         </ul>
       </div>
-    </section>
 
-    <section id="education">
-      <p class="section-label">Education & Certifications</p>
-      <div class="edu-row">
-        <span class="edu-title">BTech in Computer Science</span>
-        <span class="job-date">2018</span>
-      </div>
-      <p class="edu-sub">SRM University</p>
-      <p class="section-label" style="margin-bottom: 0.75rem;">Certifications</p>
-      <div class="certs">
-        <span class="cert-tag">Microsoft Certified: Azure Data Engineer Associate</span>
-        <span class="cert-tag">Databricks Certified Professional Data Engineer</span>
-      </div>
-    </section>
-
-  </main>
-
-  <footer>
-    <div class="container">
-      <p>Aditya Pathania · Senior Data Engineer · Jammu, J&K</p>
     </div>
-  </footer>
+  </div>
+
+  <div class="section" id="education">
+    <h2 class="section-title"><span class="num">04</span>Credentials</h2>
+    <div class="achievements">
+      <div class="achievement">
+        <div class="achievement-title">BTech — Computer Science</div>
+        <div class="achievement-sub">SRM University · 2018</div>
+      </div>
+      <div class="achievement">
+        <div class="achievement-title">Azure Data Engineer Associate</div>
+        <div class="achievement-sub">Microsoft Certified</div>
+      </div>
+      <div class="achievement">
+        <div class="achievement-title">Certified Professional Data Engineer</div>
+        <div class="achievement-sub">Databricks Certified</div>
+      </div>
+      <div class="achievement">
+        <div class="achievement-title">Outstanding Performer</div>
+        <div class="achievement-sub">LTIMindtree · FY 2024-25</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <span class="footer-text">© 2026 Aditya Pathania</span>
+  <span class="footer-status"><span class="blip"></span>Open to opportunities</span>
+</footer>
+
+<script>
+// toxic smoke blobs with turbulence distortion
+(function(){
+  const wrap = document.getElementById('smoke');
+  const colors = ['#a855f7','#a3e635','#e23d3d','#5b2f87'];
+  for(let i=0;i<6;i++){
+    const b = document.createElement('div');
+    b.className='smoke-blob';
+    const size = 350 + Math.random()*350;
+    b.style.width = size+'px';
+    b.style.height = size+'px';
+    b.style.left = (Math.random()*100)+'%';
+    b.style.top = (Math.random()*100)+'%';
+    b.style.background = colors[i % colors.length];
+    b.style.animationDuration = (25 + Math.random()*25)+'s';
+    b.style.animationDelay = (Math.random()*-25)+'s';
+    wrap.appendChild(b);
+  }
+  // splatter decorations
+  for(let i=0;i<10;i++){
+    const s = document.createElement('div');
+    s.className='splat';
+    const size = 4 + Math.random()*14;
+    s.style.width = size+'px';
+    s.style.height = size+'px';
+    s.style.left = (Math.random()*100)+'%';
+    s.style.top = (Math.random()*100)+'%';
+    wrap.appendChild(s);
+  }
+})();
+
+// scroll reveal
+const obs = new IntersectionObserver(
+  entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');}),
+  {threshold:.1}
+);
+document.querySelectorAll('.section').forEach(s=>obs.observe(s));
+
+// active nav
+const links = document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll',()=>{
+  let cur='';
+  document.querySelectorAll('.section').forEach(s=>{
+    if(window.scrollY >= s.offsetTop-160) cur=s.id;
+  });
+  links.forEach(a=>a.classList.toggle('active', a.getAttribute('href')==='#'+cur));
+});
+</script>
 
 </body>
 </html>
